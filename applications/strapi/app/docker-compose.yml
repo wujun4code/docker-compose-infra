@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  strapi:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    image: strapi:latest
+    container_name: strapi
+    env_file:
+      - .env
+    volumes:
+      - ./config:/opt/app/config
+      - ./src:/opt/app/src
+      - ./package.json:/opt/package.json
+      - ./yarn.lock:/opt/yarn.lock
+      - ./.env:/opt/app/.env
+      - ./public/uploads:/opt/app/public/uploads
+    environment:
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      APP_KEYS: ${APP_KEYS}
+      NODE_ENV: ${NODE_ENV}      
+    ports:
+      - '1337:1337'
+    networks:
+      - postgres
+      - strapi
+
+networks:
+  postgres:
+    external: true
+
+  strapi:
+    name: strapi
+    driver: bridge

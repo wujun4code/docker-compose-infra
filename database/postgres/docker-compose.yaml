@@ -1,0 +1,35 @@
+services:
+
+  postgres:
+    image: 'bitnami/postgresql:latest'
+    # build:
+    #   dockerfile: ./Dockerfile
+    #   context: ./
+    # deploy:
+    #     resources:
+    #         limits:
+    #           cpus: '0.20'
+    #           memory: 200M
+    #         reservations:
+    #           cpus: '0.20'
+    #           memory: 100M 
+    container_name: postgres
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - postgres_db_data:/bitnami/postgresql
+      - ./initdb:/docker-entrypoint-initdb.d
+      # - ./preinitdb:/docker-entrypoint-preinitdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+
+volumes:
+  postgres_db_data:
+
+networks:
+  postgres:
+    name: postgres
+    driver: bridge
