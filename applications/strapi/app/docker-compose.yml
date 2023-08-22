@@ -5,8 +5,8 @@ services:
     build:
       dockerfile: ./Dockerfile
       context: ./
-    image: strapi:latest
-    container_name: strapi
+    image: my-strapi:latest
+    container_name: my-strapi
     env_file:
       - .env
     volumes:
