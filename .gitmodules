@@ -1,0 +1,3 @@
+[submodule "middleware/pgsync/pgsync"]
+	path = middleware/pgsync/pgsync
+	url = https://github.com/toluaina/pgsync

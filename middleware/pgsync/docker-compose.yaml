@@ -1,0 +1,28 @@
+services:
+  pgsync:
+    build:
+      context: ./pgsync
+      dockerfile: Dockerfile
+    command: ./runserver.sh
+    sysctls:
+      - net.ipv4.tcp_keepalive_time=200
+      - net.ipv4.tcp_keepalive_intvl=200
+      - net.ipv4.tcp_keepalive_probes=5
+    labels:
+      org.label-schema.name: "pgsync"
+      org.label-schema.description: "Postgres to Elasticsearch sync"
+      com.label-schema.service-type: "daemon"
+    env_file:
+      - .env 
+    networks:
+      - postgres
+      - elasticsearch
+      - redis
+
+networks:
+  postgres:
+    external: true
+  elasticsearch:
+    external: true
+  redis:
+    external: true    
