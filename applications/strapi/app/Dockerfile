@@ -1,6 +1,6 @@
 # path: ./Dockerfile
 
-FROM node:20-alpine
+FROM node:18-alpine
 # Installing libvips-dev for sharp Compatibility
 RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev nasm bash vips-dev
 ARG NODE_ENV=development
@@ -17,4 +17,4 @@ RUN chown -R node:node /opt/app
 USER node
 RUN ["yarn", "build"]
 EXPOSE 1337
-CMD ["yarn", "develop"]
+CMD ["yarn", "start"]
