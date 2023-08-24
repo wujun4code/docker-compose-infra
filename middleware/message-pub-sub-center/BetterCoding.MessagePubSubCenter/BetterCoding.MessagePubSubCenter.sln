@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33927.249
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Service", "02-Service", "{51613202-E6D5-4C28-8880-F0245EF512CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Application", "01-Application", "{A3B16F16-E7DD-43F3-AF6F-162778952E8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-Repository", "03-Repository", "{E5019DF2-AB8C-4433-BED3-E76F834606FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-Persistent", "04-Persistent", "{32DD744A-F26D-438A-A90F-81406438DE76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-Contracts", "05-Contracts", "{6E953388-C086-4231-AF3F-14BD699A9AFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06-Infra", "06-Infra", "{58233B08-824E-43DB-8C25-E8D18F7BEC92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.MessagePubSubCenter.Infra", "BetterCoding.MessagePubSubCenter.Infra\BetterCoding.MessagePubSubCenter.Infra.csproj", "{30DB62AC-2AF8-4911-AFA0-36070BB79741}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.MessagePubSubCenter.Services", "BetterCoding.MessagePubSubCenter.Services\BetterCoding.MessagePubSubCenter.Services.csproj", "{886E8947-B898-44F3-9F07-932837D8E36B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.MessagePubSubCenter.Entity", "BetterCoding.MessagePubSubCenter.Entity\BetterCoding.MessagePubSubCenter.Entity.csproj", "{D5975044-1ABD-49DB-BDD0-2574A44580DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.MessagePubSubCenter.API", "BetterCoding.MessagePubSubCenter.API\BetterCoding.MessagePubSubCenter.API.csproj", "{E011BD34-ED7B-45EC-8611-AF3B5E98D196}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterCoding.MessagePubSubCenter.Workers", "BetterCoding.MessagePubSubCenter.Workers\BetterCoding.MessagePubSubCenter.Workers.csproj", "{74C2A03D-5D79-4D0B-B75A-D9242AA24A03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterCoding.Strapi.SDK.Core", "BetterCoding.Strapi.SDK.Core\BetterCoding.Strapi.SDK.Core.csproj", "{92769B19-5391-41A0-AC2B-A6192B9E197A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{30DB62AC-2AF8-4911-AFA0-36070BB79741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30DB62AC-2AF8-4911-AFA0-36070BB79741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30DB62AC-2AF8-4911-AFA0-36070BB79741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30DB62AC-2AF8-4911-AFA0-36070BB79741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{886E8947-B898-44F3-9F07-932837D8E36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{886E8947-B898-44F3-9F07-932837D8E36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{886E8947-B898-44F3-9F07-932837D8E36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{886E8947-B898-44F3-9F07-932837D8E36B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5975044-1ABD-49DB-BDD0-2574A44580DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5975044-1ABD-49DB-BDD0-2574A44580DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5975044-1ABD-49DB-BDD0-2574A44580DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5975044-1ABD-49DB-BDD0-2574A44580DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E011BD34-ED7B-45EC-8611-AF3B5E98D196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E011BD34-ED7B-45EC-8611-AF3B5E98D196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E011BD34-ED7B-45EC-8611-AF3B5E98D196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E011BD34-ED7B-45EC-8611-AF3B5E98D196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74C2A03D-5D79-4D0B-B75A-D9242AA24A03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74C2A03D-5D79-4D0B-B75A-D9242AA24A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74C2A03D-5D79-4D0B-B75A-D9242AA24A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74C2A03D-5D79-4D0B-B75A-D9242AA24A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92769B19-5391-41A0-AC2B-A6192B9E197A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92769B19-5391-41A0-AC2B-A6192B9E197A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92769B19-5391-41A0-AC2B-A6192B9E197A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92769B19-5391-41A0-AC2B-A6192B9E197A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{30DB62AC-2AF8-4911-AFA0-36070BB79741} = {58233B08-824E-43DB-8C25-E8D18F7BEC92}
+		{886E8947-B898-44F3-9F07-932837D8E36B} = {51613202-E6D5-4C28-8880-F0245EF512CE}
+		{D5975044-1ABD-49DB-BDD0-2574A44580DC} = {6E953388-C086-4231-AF3F-14BD699A9AFD}
+		{E011BD34-ED7B-45EC-8611-AF3B5E98D196} = {A3B16F16-E7DD-43F3-AF6F-162778952E8A}
+		{74C2A03D-5D79-4D0B-B75A-D9242AA24A03} = {A3B16F16-E7DD-43F3-AF6F-162778952E8A}
+		{92769B19-5391-41A0-AC2B-A6192B9E197A} = {58233B08-824E-43DB-8C25-E8D18F7BEC92}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C875BA99-593A-4807-A505-9DFFBE0EDFAA}
+	EndGlobalSection
+EndGlobal

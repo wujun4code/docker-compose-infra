@@ -1,0 +1,23 @@
+{
+    "users": [
+        {
+            "name": "demo",
+            "password": "CHANGE-ME",
+            "tags": "administrator"
+        }
+    ],
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "permissions": [
+        {
+            "user": "demo",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        }
+    ]
+}
