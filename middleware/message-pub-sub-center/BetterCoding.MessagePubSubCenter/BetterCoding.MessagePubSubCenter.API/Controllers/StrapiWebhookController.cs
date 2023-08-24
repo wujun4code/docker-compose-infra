@@ -1,5 +1,5 @@
-using BetterCoding.MessagePubSubCenter.Entity;
 using BetterCoding.MessagePubSubCenter.Services;
+using BetterCoding.Strapi.SDK.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetterCoding.MessagePubSubCenter.API.Controllers

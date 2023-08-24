@@ -1,4 +1,4 @@
-﻿using BetterCoding.MessagePubSubCenter.Entity;
+﻿using BetterCoding.Strapi.SDK.Core;
 
 namespace BetterCoding.MessagePubSubCenter.Services
 {
