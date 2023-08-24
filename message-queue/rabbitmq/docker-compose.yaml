@@ -1,0 +1,35 @@
+services:
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    deploy:
+        resources:
+            limits:
+              cpus: '0.50'
+              memory: 512M
+            reservations:
+              cpus: '0.25'
+              memory: 256m
+    container_name: rabbitmq
+    ports:
+      - '4369:4369'
+      - '5551:5551'
+      - '5552:5552'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
+    env_file:
+      - .env
+    volumes:
+      - 'rabbitmq_data:/bitnami'
+      - ./app/load_definition.json:/app/load_definition.json
+    networks:
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
+
+
+networks:
+  rabbitmq:
+    name: rabbitmq
+    driver: bridge

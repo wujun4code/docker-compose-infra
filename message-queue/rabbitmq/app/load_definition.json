@@ -1,0 +1,35 @@
+{
+    "users": [
+        {
+            "name": "demo",
+            "password": "8fvnhQbsIjLJ9gRc",
+            "tags": "administrator"
+        },
+        {
+            "name": "pub-sub",
+            "password": "hQGBcF4hzcIK6PW",
+            "tags": "administrator"
+        }
+    ],
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "permissions": [
+        {
+            "user": "demo",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        },
+        {
+            "user": "pub-sub",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        }
+    ]
+}
