@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  strapi:
+    build:
+      dockerfile: ./BetterCoding.MessagePubSubCenter.API/Dockerfile
+      context: ./
+    image: bc-mpbc-api:latest
+    container_name: mpbc-api
+    env_file: 
+      - ./BetterCoding.MessagePubSubCenter.API/.env.production
+    ports:
+      - '8080:80'
+    networks:
+      - rabbitmq
+      - elasticsearch
+
+networks:
+  rabbitmq:
+    external: true
+  elasticsearch:
+    external: true  
