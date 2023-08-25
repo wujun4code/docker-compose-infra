@@ -5,6 +5,7 @@ using BetterCoding.Strapi.SDK.Core.Services;
 using BetterCoding.Strapi.SDK.Core.Webhook;
 using Microsoft.Extensions.Configuration;
 using static BetterCoding.Strapi.SDK.Core.StrapiClient;
+using BetterCoding.MessagePubSubCenter.Repository;
 
 namespace BetterCoding.MessagePubSubCenter.Services
 {
@@ -15,6 +16,7 @@ namespace BetterCoding.MessagePubSubCenter.Services
             builder.RegisterAssembly("BetterCoding.MessagePubSubCenter.Services");
             builder.UseEasyNetQ(configuration);
             builder.UseStrapiSDK(configuration);
+            builder.UseElasticSearch(configuration);
             return builder;
         }
 

@@ -1,6 +1,6 @@
 ﻿using BetterCoding.MessagePubSubCenter.Services;
 using BetterCoding.Strapi.SDK.Core.Webhook;
-using EasyNetQ;
+using Elastic.Clients.Elasticsearch;
 using Newtonsoft.Json;
 
 namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
@@ -9,13 +9,16 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
     {
         private readonly ILogger<StrapiElasticSearchSync> _logger;
         private readonly IStrapiWebhookService _strapiWebhookService;
+        private readonly ElasticsearchClient _elasticsearchClient;
 
         public StrapiElasticSearchSync(
             ILogger<StrapiElasticSearchSync> logger,
-            IStrapiWebhookService strapiWebhookService)
+            IStrapiWebhookService strapiWebhookService,
+            ElasticsearchClient elasticsearchClient)
         {
             _logger = logger;
             _strapiWebhookService = strapiWebhookService;
+            _elasticsearchClient = elasticsearchClient;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,6 +29,7 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
         private async Task Handle(WebhookPayload message, CancellationToken cancellationToken)
         {
             var json = JsonConvert.SerializeObject(message);
+            
             _logger.LogInformation($"sync strapi data to elasticsearch: {json}");
         }
     }
