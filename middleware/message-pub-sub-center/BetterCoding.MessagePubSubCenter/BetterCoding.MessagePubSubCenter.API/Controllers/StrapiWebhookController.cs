@@ -1,6 +1,8 @@
 using BetterCoding.MessagePubSubCenter.Services;
-using BetterCoding.Strapi.SDK.Core;
+using BetterCoding.Strapi.SDK.Core.Webhook;
+using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BetterCoding.MessagePubSubCenter.API.Controllers
 {
@@ -18,11 +20,13 @@ namespace BetterCoding.MessagePubSubCenter.API.Controllers
         }
 
         [HttpPost("webhook")]
-        public async Task<IActionResult> InvokeWebhook([FromBody] StrapiWebhookPayload payload)
+        public async Task<IActionResult> InvokeWebhook([FromBody] WebhookPayload payload)
         {
             if (payload.Event == null) return BadRequest();
             try
             {
+                var json = JsonConvert.SerializeObject(payload);
+                _logger.LogInformation($"received strapi webhook: {json}");
                 await _strapiWebhookService.PublishMessageAsync(payload);
                 return Ok();
             }
