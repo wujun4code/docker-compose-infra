@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BetterCoding.MessagePubSubCenter.Entity\BetterCoding.MessagePubSubCenter.Entity.csproj" />
     <ProjectReference Include="..\BetterCoding.MessagePubSubCenter.Infra\BetterCoding.MessagePubSubCenter.Infra.csproj" />
+    <ProjectReference Include="..\BetterCoding.MessagePubSubCenter.Repository\BetterCoding.MessagePubSubCenter.Repository.csproj" />
     <ProjectReference Include="..\BetterCoding.Strapi.SDK.Core\BetterCoding.Strapi.SDK.Core.csproj" />
   </ItemGroup>
 
