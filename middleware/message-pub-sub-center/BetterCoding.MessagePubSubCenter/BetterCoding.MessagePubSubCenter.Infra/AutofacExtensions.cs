@@ -23,7 +23,7 @@ namespace BetterCoding.MessagePubSubCenter.Infra
             {
                 throw new Exception("no specific rebbitMq url found.");
             }
-            var bus = RabbitHutch.CreateBus(rebbitMqUrl);
+            var bus = RabbitHutch.CreateBus(rebbitMqUrl, register => register.EnableConsoleLogger());
 
             builder.RegisterInstance(bus).As<IBus>().SingleInstance();
 

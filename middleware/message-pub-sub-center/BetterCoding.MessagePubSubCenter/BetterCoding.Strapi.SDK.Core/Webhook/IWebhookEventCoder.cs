@@ -16,7 +16,7 @@ namespace BetterCoding.Strapi.SDK.Core.Webhook
     {
         public IWebhookPayload Decode(IDictionary<string, object> data, IDataDecoder decoder, IServiceHub serviceHub)
         {
-            IDictionary<string, object> serverData = new Dictionary<string, object> { },
+            Dictionary<string, object> serverData = new Dictionary<string, object> { },
                 mutableData = new Dictionary<string, object>(data);
 
             string eventName = Extract(mutableData, "event", (obj) => obj as string);

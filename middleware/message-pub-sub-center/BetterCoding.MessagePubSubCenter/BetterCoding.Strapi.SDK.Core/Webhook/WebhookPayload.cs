@@ -7,7 +7,7 @@ namespace BetterCoding.Strapi.SDK.Core.Webhook
         string Event { get; set; }
         DateTime? CreatedAt { get; set; }
         string Model { get; set; }
-        IDictionary<string, object> Entry { get; set; }
+        Dictionary<string, object> Entry { get; set; }
     }
 
     public class WebhookPayload: IWebhookPayload
@@ -15,6 +15,6 @@ namespace BetterCoding.Strapi.SDK.Core.Webhook
         public string Event { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string Model { get; set; }
-        public IDictionary<string, object> Entry { get; set; }
+        public Dictionary<string, object> Entry { get; set; }
     }
 }

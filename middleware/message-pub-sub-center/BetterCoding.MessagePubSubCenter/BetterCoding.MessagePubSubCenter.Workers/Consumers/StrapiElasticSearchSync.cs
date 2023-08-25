@@ -1,4 +1,5 @@
-﻿using BetterCoding.Strapi.SDK.Core.Webhook;
+﻿using BetterCoding.MessagePubSubCenter.Services;
+using BetterCoding.Strapi.SDK.Core.Webhook;
 using EasyNetQ;
 using Newtonsoft.Json;
 
@@ -7,18 +8,19 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
     public class StrapiElasticSearchSync : BackgroundService
     {
         private readonly ILogger<StrapiElasticSearchSync> _logger;
-        private readonly IBus _bus;
+        private readonly IStrapiWebhookService _strapiWebhookService;
 
-        public StrapiElasticSearchSync(ILogger<StrapiElasticSearchSync> logger,
-            IBus bus)
+        public StrapiElasticSearchSync(
+            ILogger<StrapiElasticSearchSync> logger,
+            IStrapiWebhookService strapiWebhookService)
         {
             _logger = logger;
-            _bus = bus;
+            _strapiWebhookService = strapiWebhookService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _bus.PubSub.SubscribeAsync<WebhookPayload>("sync-strapi-to-elasticsearch", Handle, x => x.WithTopic("strapi.webhook"));
+            await _strapiWebhookService.SubscribeAsync("sync-elasticsearch", Handle);
         }
 
         private async Task Handle(WebhookPayload message, CancellationToken cancellationToken)
