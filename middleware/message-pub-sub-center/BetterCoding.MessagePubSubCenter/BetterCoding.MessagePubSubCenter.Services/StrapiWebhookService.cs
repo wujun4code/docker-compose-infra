@@ -1,4 +1,4 @@
-﻿using BetterCoding.Strapi.SDK.Core;
+﻿using BetterCoding.Strapi.SDK.Core.Webhook;
 using EasyNetQ;
 
 namespace BetterCoding.MessagePubSubCenter.Services
@@ -12,9 +12,9 @@ namespace BetterCoding.MessagePubSubCenter.Services
             _bus = bus;
         }
 
-        public async Task PublishMessageAsync(StrapiWebhookPayload strapiWebhookPayload)
+        public async Task PublishMessageAsync(WebhookPayload strapiWebhookPayload)
         {
-            await _bus.PubSub.PublishAsync(strapiWebhookPayload, "strapi");
+            await _bus.PubSub.PublishAsync(strapiWebhookPayload, "strapi.webhook");
         }
     }
 }

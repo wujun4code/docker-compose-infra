@@ -1,5 +1,5 @@
 using BetterCoding.MessagePubSubCenter.Services;
-using BetterCoding.Strapi.SDK.Core;
+using BetterCoding.Strapi.SDK.Core.Webhook;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetterCoding.MessagePubSubCenter.API.Controllers
@@ -18,7 +18,7 @@ namespace BetterCoding.MessagePubSubCenter.API.Controllers
         }
 
         [HttpPost("webhook")]
-        public async Task<IActionResult> InvokeWebhook([FromBody] StrapiWebhookPayload payload)
+        public async Task<IActionResult> InvokeWebhook([FromBody] WebhookPayload payload)
         {
             if (payload.Event == null) return BadRequest();
             try
