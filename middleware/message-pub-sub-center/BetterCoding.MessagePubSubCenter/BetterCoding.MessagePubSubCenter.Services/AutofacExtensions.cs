@@ -6,6 +6,7 @@ using BetterCoding.Strapi.SDK.Core.Webhook;
 using Microsoft.Extensions.Configuration;
 using static BetterCoding.Strapi.SDK.Core.StrapiClient;
 using BetterCoding.MessagePubSubCenter.Repository;
+using BetterCoding.MessagePubSubCenter.Repository.ElasticSearch;
 
 namespace BetterCoding.MessagePubSubCenter.Services
 {
@@ -17,6 +18,7 @@ namespace BetterCoding.MessagePubSubCenter.Services
             builder.UseEasyNetQ(configuration);
             builder.UseStrapiSDK(configuration);
             builder.UseElasticSearch(configuration);
+            builder.EnableStrapiElasticSearch(configuration);
             return builder;
         }
 
@@ -29,6 +31,18 @@ namespace BetterCoding.MessagePubSubCenter.Services
             builder.RegisterInstance(strapiClient.Services).As<IServiceHub>();
             builder.RegisterInstance(strapiClient.Services.WebhookEventCoder)
                 .As<IWebhookEventCoder>();
+            builder.RegisterInstance(strapiClient.Services.WebhookEventClassMapping)
+              .As<IWebhookEventClassMapping>();
+
+            return builder;
+        }
+
+        public static ContainerBuilder EnableStrapiElasticSearch(this ContainerBuilder builder, IConfiguration configuration)
+        {
+            builder.RegisterType<StrapiWebhookEventElasticSearchRepository>()
+                .AsImplementedInterfaces()
+                .As<IElasticSearchRepository<IWebhookPayload>>()
+                .InstancePerLifetimeScope();
 
             return builder;
         }

@@ -8,11 +8,13 @@ namespace BetterCoding.Strapi.SDK.Core.Services
     {
         IDataDecoder Decoder { get; }
         IWebhookEventCoder WebhookEventCoder { get; }
+        IWebhookEventClassMapping WebhookEventClassMapping { get; }
     }
 
     public class ServiceHub : IServiceHub
     {
         public IDataDecoder Decoder => new DataDecode();
         public IWebhookEventCoder WebhookEventCoder => new WebhookEventCoder();
+        public IWebhookEventClassMapping WebhookEventClassMapping => new WebhookEventClassMapping();
     }
 }

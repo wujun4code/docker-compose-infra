@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.MessagePubSubC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.Strapi.SDK.Core", "BetterCoding.Strapi.SDK.Core\BetterCoding.Strapi.SDK.Core.csproj", "{92769B19-5391-41A0-AC2B-A6192B9E197A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterCoding.MessagePubSubCenter.Repository", "BetterCoding.MessagePubSubCenter.Repository\BetterCoding.MessagePubSubCenter.Repository.csproj", "{DD6076B6-0939-4D5F-8C87-DB088565EE89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterCoding.MessagePubSubCenter.Repository", "BetterCoding.MessagePubSubCenter.Repository\BetterCoding.MessagePubSubCenter.Repository.csproj", "{DD6076B6-0939-4D5F-8C87-DB088565EE89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
