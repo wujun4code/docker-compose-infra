@@ -1,7 +1,6 @@
 ﻿using BetterCoding.MessagePubSubCenter.Repository.ElasticSearch;
 using BetterCoding.Strapi.SDK.Core.Services;
 using BetterCoding.Strapi.SDK.Core.Webhook;
-using Elastic.Clients.Elasticsearch;
 
 namespace BetterCoding.MessagePubSubCenter.Services
 {

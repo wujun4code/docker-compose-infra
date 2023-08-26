@@ -1,5 +1,7 @@
 ﻿using BetterCoding.MessagePubSubCenter.Repository;
 using BetterCoding.MessagePubSubCenter.Repository.ElasticSearch;
+using BetterCoding.MessagePubSubCenter.Services.Pipelines;
+using BetterCoding.MessagePubSubCenter.Services.Pipelines.Webhook;
 using BetterCoding.Patterns.Pipeline;
 using BetterCoding.Strapi.SDK.Core.Webhook;
 using EasyNetQ;
@@ -30,61 +32,6 @@ namespace BetterCoding.MessagePubSubCenter.Services
             await _bus.PubSub.SubscribeAsync(subscriptionId, handler, x => x.WithTopic(_topic));
         }
 
-        class EntryLog
-        {
-            public EntryLog(WebhookPayloadContext context)
-            {
-                Context = context;
-            }
-
-            public WebhookPayloadContext Context { get; set; }
-            public string CollectionName => $"{Context.Payload.Model}-audit-log";
-        }
-
-        class Enrty : Dictionary<string, object>
-        {
-            public Enrty(WebhookPayloadContext context) : base(context.Payload.Entry)
-            {
-                Context = context;
-            }
-
-            public WebhookPayloadContext Context { get; set; }
-            public string CollectionName => Context.Payload.Model;
-
-        }
-
-        class WebhookPayloadContext
-        {
-            public WebhookPayloadContext(WebhookPayload payload)
-            {
-                Payload = payload;
-            }
-
-            public WebhookPayload Payload { get; set; }
-        }
-
-        class SyncEntry : AutomicTransactionPipeline<WebhookPayloadContext>
-        {
-            IElasticSearchRepository _elasticSearchRepository;
-            public SyncEntry(IElasticSearchRepository elasticSearchRepository)
-            {
-                _elasticSearchRepository = elasticSearchRepository;
-            }
-
-            public override async Task<WebhookPayloadContext> ProcessAsync(WebhookPayloadContext input)
-            {
-                var entry = new Enrty(input);
-                var serverData = entry.ToDictionary(x => x.Key, y => y.Value);
-                await _elasticSearchRepository.AddAsync(serverData, entry.CollectionName);
-                return input;
-            }
-
-            public override Task<WebhookPayloadContext> RevertAsync(WebhookPayloadContext input)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         class SyncLog : AutomicTransactionPipeline<WebhookPayloadContext>
         {
             IElasticSearchRepository _elasticSearchRepository;
@@ -109,12 +56,38 @@ namespace BetterCoding.MessagePubSubCenter.Services
 
         public async Task SyncToElasticSearch(WebhookPayload webhookPayload)
         {
-            var syncPipeline = new SyncEntry(_elasticSearchRepository);
-            syncPipeline.Next(new SyncLog(_elasticSearchRepository));
-
             var context = new WebhookPayloadContext(webhookPayload);
+            var syncPipeline = CreatePipeline(context, _elasticSearchRepository);
+            syncPipeline.Next(new SyncLog(_elasticSearchRepository));
 
             await syncPipeline.ExecuteAsync(context);
         }
+
+        private AutomicTransactionPipeline<WebhookPayloadContext> DeleteWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
+        {
+            var fetch = new FetchEntry(elasticSearchRepository);
+            var delete = new DeleteEntry(elasticSearchRepository);
+            var auditLog = new AuditLog(elasticSearchRepository);
+            fetch.Next(delete).Next(auditLog);
+
+            return fetch;
+        }
+
+        private AutomicTransactionPipeline<WebhookPayloadContext> CreateWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
+        {
+            var create = new CreateEntry(elasticSearchRepository);
+            var auditLog = new AuditLog(elasticSearchRepository);
+            create.Next(auditLog);
+
+            return create;
+        }
+
+        private AutomicTransactionPipeline<WebhookPayloadContext> CreatePipeline(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository) => input.Payload.Event switch
+        {
+            null => throw new NotSupportedException(),
+            "entry.create" => CreateWorkflow(input, elasticSearchRepository),
+            "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
+            _ => throw new NotSupportedException()
+        };
     }
 }

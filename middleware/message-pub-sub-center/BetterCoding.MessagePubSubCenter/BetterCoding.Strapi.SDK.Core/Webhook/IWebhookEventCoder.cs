@@ -25,11 +25,6 @@ namespace BetterCoding.Strapi.SDK.Core.Webhook
 
             foreach (KeyValuePair<string, object> pair in mutableData)
             {
-                if (pair.Key == "__type" || pair.Key == "className")
-                {
-                    continue;
-                }
-
                 serverData[pair.Key] = decoder.Decode(pair.Value, serviceHub);
             }
 
