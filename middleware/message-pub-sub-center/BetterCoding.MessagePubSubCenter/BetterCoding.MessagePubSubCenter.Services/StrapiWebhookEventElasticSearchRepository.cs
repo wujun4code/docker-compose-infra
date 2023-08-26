@@ -8,7 +8,7 @@ namespace BetterCoding.MessagePubSubCenter.Services
     public class StrapiWebhookEventElasticSearchRepository : ElasticSearchRepository<IWebhookPayload>
     {
         private readonly IWebhookEventClassMapping _webhookEventClassMapping;
-        public StrapiWebhookEventElasticSearchRepository(ElasticsearchClient client, IWebhookEventClassMapping webhookEventClassMapping) : base(client)
+        public StrapiWebhookEventElasticSearchRepository(IElasticSearchRepository elasticSearchRepository, IWebhookEventClassMapping webhookEventClassMapping) : base(elasticSearchRepository)
         {
             _webhookEventClassMapping = webhookEventClassMapping;
         }

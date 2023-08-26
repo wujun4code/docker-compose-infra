@@ -19,4 +19,8 @@
     <ProjectReference Include="..\BetterCoding.Strapi.SDK.Core\BetterCoding.Strapi.SDK.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>
