@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BetterCoding.MessagePubSubCenter.API.Middlewares;
 using BetterCoding.MessagePubSubCenter.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +29,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseAPIKeyMiddleware(builder.Configuration);
 app.MapControllers();
 
 app.Run();
