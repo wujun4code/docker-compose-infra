@@ -12,8 +12,7 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
         
         public StrapiElasticSearchSync(
             ILogger<StrapiElasticSearchSync> logger,
-            IStrapiWebhookService strapiWebhookService,
-            IElasticSearchRepository<IWebhookPayload> elasticSearchRepository)
+            IStrapiWebhookService strapiWebhookService)
         {
             _logger = logger;
             _strapiWebhookService = strapiWebhookService;

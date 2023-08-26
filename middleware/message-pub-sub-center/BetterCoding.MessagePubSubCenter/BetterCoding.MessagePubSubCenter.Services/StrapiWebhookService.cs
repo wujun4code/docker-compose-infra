@@ -85,9 +85,33 @@ namespace BetterCoding.MessagePubSubCenter.Services
             }
         }
 
+        class SyncLog : AutomicTransactionPipeline<WebhookPayloadContext>
+        {
+            IElasticSearchRepository _elasticSearchRepository;
+            public SyncLog(IElasticSearchRepository elasticSearchRepository)
+            {
+                _elasticSearchRepository = elasticSearchRepository;
+            }
+
+            public override async Task<WebhookPayloadContext> ProcessAsync(WebhookPayloadContext input)
+            {
+                var entry = new EntryLog(input);
+                var serverData = entry.Context.Payload;
+                await _elasticSearchRepository.AddAsync(serverData, entry.CollectionName);
+                return input;
+            }
+
+            public override Task<WebhookPayloadContext> RevertAsync(WebhookPayloadContext input)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public async Task SyncToElasticSearch(WebhookPayload webhookPayload)
         {
             var syncPipeline = new SyncEntry(_elasticSearchRepository);
+            syncPipeline.Next(new SyncLog(_elasticSearchRepository));
+
             var context = new WebhookPayloadContext(webhookPayload);
 
             await syncPipeline.ExecuteAsync(context);
