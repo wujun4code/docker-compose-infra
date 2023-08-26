@@ -6,5 +6,6 @@ namespace BetterCoding.MessagePubSubCenter.Services
     {
         Task PublishMessageAsync(WebhookPayload strapiWebhookPayload);
         Task SubscribeAsync(string subscriptionId, Func<WebhookPayload, CancellationToken, Task> handler);
+        Task SyncToElasticSearch(WebhookPayload webhookPayload);
     }
 }

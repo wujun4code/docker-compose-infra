@@ -9,7 +9,7 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
     {
         private readonly ILogger<StrapiElasticSearchSync> _logger;
         private readonly IStrapiWebhookService _strapiWebhookService;
-        private readonly IElasticSearchRepository<IWebhookPayload> _elasticSearchRepository;
+        
         public StrapiElasticSearchSync(
             ILogger<StrapiElasticSearchSync> logger,
             IStrapiWebhookService strapiWebhookService,
@@ -17,7 +17,6 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
         {
             _logger = logger;
             _strapiWebhookService = strapiWebhookService;
-            _elasticSearchRepository = elasticSearchRepository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,7 +27,7 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
         private async Task Handle(WebhookPayload message, CancellationToken cancellationToken)
         {
             var json = JsonConvert.SerializeObject(message);
-            await _elasticSearchRepository.AddAsync(message);
+            await _strapiWebhookService.SyncToElasticSearch(message);
             _logger.LogInformation($"sync strapi data to elasticsearch: {json}");
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using BetterCoding.MessagePubSubCenter.Repository.ElasticSearch;
 using Elastic.Clients.Elasticsearch;
 using Microsoft.Extensions.Configuration;
 
@@ -20,9 +21,20 @@ namespace BetterCoding.MessagePubSubCenter.Repository
                 .RequestTimeout(TimeSpan.FromMinutes(2));
 
             var client = new ElasticsearchClient(settings);
-            
+
             builder.RegisterInstance(client).As<ElasticsearchClient>().SingleInstance();
 
+            builder.RegisterType<EasyElasticSearchRepository>()
+            .As<ElasticSearchRepository>()
+            .AsImplementedInterfaces().InstancePerLifetimeScope();
+
+             builder.RegisterType<EasyElasticSearchRepository>()
+            .As<IElasticSearchRepository>()
+            .AsImplementedInterfaces().InstancePerLifetimeScope();
+            
+            builder.RegisterType<RepositoryHub>()
+            .As<IRepositoryHub>()
+            .AsImplementedInterfaces().InstancePerLifetimeScope();
             return builder;
         }
     }
