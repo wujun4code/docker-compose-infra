@@ -9,6 +9,7 @@ services:
       #   HTTP_PROXY: http://192.168.137.1:7890
       #   HTTPS_PROXY: http://192.168.137.1:7890
     image: my-strapi:latest
+    restart: always    
     container_name: my-strapi
     env_file: 
       - .env.production

@@ -6,6 +6,7 @@ services:
       dockerfile: ./BetterCoding.MessagePubSubCenter.API/Dockerfile
       context: ./
     image: bc-mpbc-api:latest
+    restart: always
     container_name: mpbc-api
     env_file: 
       - ./BetterCoding.MessagePubSubCenter.API/.env.production
