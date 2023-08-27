@@ -10,6 +10,7 @@ services:
     #           cpus: '0.25'
     #           memory: 256m
     container_name: rabbitmq
+    restart: always
     ports:
       - '4369:4369'
       - '5551:5551'

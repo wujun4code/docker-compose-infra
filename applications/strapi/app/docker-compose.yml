@@ -24,9 +24,12 @@ services:
     networks:
       - postgres
       - strapi
+      - mpbc
 
 networks:
   postgres:
+    external: true
+  mpbc:
     external: true
 
   strapi:
