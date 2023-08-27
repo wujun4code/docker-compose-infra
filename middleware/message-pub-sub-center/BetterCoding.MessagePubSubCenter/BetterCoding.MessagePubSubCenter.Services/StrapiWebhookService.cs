@@ -71,14 +71,13 @@ namespace BetterCoding.MessagePubSubCenter.Services
             return fetch;
         }
 
-
-
         private AutomicTransactionPipeline<WebhookPayloadContext> CreatePipeline(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository) => input.Payload.Event switch
         {
             null => throw new NotSupportedException(),
             "entry.create" => CreateWorkflow(input, elasticSearchRepository),
             "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
             "entry.update" => EditWorkflow(input, elasticSearchRepository),
+            "entry.publish" => EditWorkflow(input, elasticSearchRepository),
             _ => throw new NotSupportedException()
         };
     }
