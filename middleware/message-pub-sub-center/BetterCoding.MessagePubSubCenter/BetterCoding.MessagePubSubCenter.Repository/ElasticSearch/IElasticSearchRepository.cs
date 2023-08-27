@@ -1,6 +1,8 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.Core.Search;
 using Elastic.Clients.Elasticsearch.QueryDsl;
+using Elastic.Transport.Products.Elasticsearch;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
 {
@@ -14,12 +16,15 @@ namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
     {
         ElasticsearchClient Client { get; }
         IRepositoryHub RepositoryHub { get; }
+
         Task<T> AddAsync<T>(T entity, string collectionName = "");
         Task DeleteAsync<T, TId>(TId id, string collectionName = "")
              where TId : Id;
         Task<T> GetAsync<T, TId>(TId id, string collectionName = "")
              where TId : Id;
         Task<T> FindOneAsync<T, TId>(TId id, string collectionName = "", Action<Hit<T>> idAssignCallback = null);
+
+        Task<T> UpdateAsync<T, TId>(T entity, TId id, string collectionName = "") where TId : Id;
     }
 
     public abstract class ElasticSearchRepository : IElasticSearchRepository
@@ -42,50 +47,33 @@ namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
         {
             var indexName = string.IsNullOrEmpty(collectionName) ? _repositoryHub.CollectionNameMapping.GetCollectionName(entity) : collectionName;
             var response = await _client.IndexAsync(entity, indexName);
-            if (!response.IsValidResponse)
-            {
-                if (response.ApiCallDetails.OriginalException != null)
-                    throw response.ApiCallDetails.OriginalException;
-                else throw new InvalidOperationException(response.ApiCallDetails.ToString());
-            }
+
+            HandleUnexpectedResponse(response);
 
             return entity;
         }
 
-        public async Task DeleteAsync<T, TId>(TId id, string collectionName = "")
+        public virtual async Task DeleteAsync<T, TId>(TId id, string collectionName = "")
             where TId : Id
         {
             var indexName = string.IsNullOrEmpty(collectionName) ? _repositoryHub.CollectionNameMapping.GetCollectionName<T>() : collectionName;
             var response = await _client.DeleteAsync(indexName, id);
-            if (!response.IsValidResponse)
-            {
-                if (response.ApiCallDetails.OriginalException != null)
-                    throw response.ApiCallDetails.OriginalException;
-                else throw new InvalidOperationException(response.ApiCallDetails.ToString());
-            }
+            HandleUnexpectedResponse(response);
         }
 
-        public async Task<T> GetAsync<T, TId>(TId id, string collectionName = "")
+        public virtual async Task<T> GetAsync<T, TId>(TId id, string collectionName = "")
             where TId : Id
         {
             var indexName = string.IsNullOrEmpty(collectionName) ? _repositoryHub.CollectionNameMapping.GetCollectionName<T>() : collectionName;
             var response = await _client.GetAsync<T>(id, idx => idx.Index(indexName));
-            if (!response.IsValidResponse)
-            {
-                if (response.ApiCallDetails.OriginalException != null)
-                    throw response.ApiCallDetails.OriginalException;
-                else if (response.ElasticsearchServerError != null
-                    && response.ElasticsearchServerError.Status == 404)
-                {
-                    throw new KeyNotFoundException($"index or doc can not be found");
-                }
-            }
+
+            Handle404Response(response);
 
             if (response.Source == null) throw new KeyNotFoundException(response.ApiCallDetails.ToString());
             return response.Source;
         }
 
-        public async Task<T> FindOneAsync<T, TId>(TId id, string collectionName = "", Action<Hit<T>> idAssignCallback = null)
+        public virtual async Task<T> FindOneAsync<T, TId>(TId id, string collectionName = "", Action<Hit<T>> idAssignCallback = null)
         {
             var indexName = string.IsNullOrEmpty(collectionName) ? _repositoryHub.CollectionNameMapping.GetCollectionName<T>() : collectionName;
             var request = new SearchRequest(indexName)
@@ -94,17 +82,10 @@ namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
                 Size = 10,
                 Query = new TermQuery("id") { Value = id.ToString() }
             };
+
             var response = await _client.SearchAsync<T>(request);
-            if (!response.IsValidResponse)
-            {
-                if (response.ApiCallDetails.OriginalException != null)
-                    throw response.ApiCallDetails.OriginalException;
-                else if (response.ElasticsearchServerError != null
-                    && response.ElasticsearchServerError.Status == 404)
-                {
-                    throw new KeyNotFoundException($"index or doc can not be found");
-                }
-            }
+
+            Handle404Response(response);
 
             if (response.Documents == null) throw new KeyNotFoundException(response.ApiCallDetails.ToString());
             var docs = response.Hits.Select(h =>
@@ -115,6 +96,38 @@ namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
             var result = docs.FirstOrDefault();
             if (result == null) return default;
             return result;
+        }
+
+        public virtual async Task<T> UpdateAsync<T, TId>(T entity, TId id, string collectionName = "")
+             where TId : Id
+        {
+            var response = await _client.UpdateAsync<T, T>(collectionName, id, u => u.Doc(entity));
+            Handle404Response(response);
+            return entity;
+        }
+
+        private void HandleUnexpectedResponse(ElasticsearchResponse response)
+        {
+            if (!response.IsValidResponse)
+            {
+                if (response.ApiCallDetails.OriginalException != null)
+                    throw response.ApiCallDetails.OriginalException;
+                else throw new InvalidOperationException(response.ApiCallDetails.ToString());
+            }
+        }
+
+        private void Handle404Response(ElasticsearchResponse response)
+        {
+            if (!response.IsValidResponse)
+            {
+                if (response.ApiCallDetails.OriginalException != null)
+                    throw response.ApiCallDetails.OriginalException;
+                else if (response.ElasticsearchServerError != null
+                    && response.ElasticsearchServerError.Status == 404)
+                {
+                    throw new KeyNotFoundException($"index or doc can not be found");
+                }
+            }
         }
     }
 

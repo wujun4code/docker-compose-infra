@@ -42,6 +42,25 @@ namespace BetterCoding.MessagePubSubCenter.Services
             await syncPipeline.ExecuteAsync(context);
         }
 
+        private AutomicTransactionPipeline<WebhookPayloadContext> CreateWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
+        {
+            var create = new CreateEntry(elasticSearchRepository);
+            var auditLog = new AuditLog(elasticSearchRepository);
+            create.Next(auditLog);
+
+            return create;
+        }
+
+        private AutomicTransactionPipeline<WebhookPayloadContext> EditWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
+        {
+            var fetch = new FetchEntry(elasticSearchRepository);
+            var edit = new EditEntry(elasticSearchRepository);
+            var auditLog = new AuditLog(elasticSearchRepository);
+
+            fetch.Next(edit).Next(auditLog);
+            return fetch;
+        }
+
         private AutomicTransactionPipeline<WebhookPayloadContext> DeleteWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
         {
             var fetch = new FetchEntry(elasticSearchRepository);
@@ -52,21 +71,14 @@ namespace BetterCoding.MessagePubSubCenter.Services
             return fetch;
         }
 
-        private AutomicTransactionPipeline<WebhookPayloadContext> CreateWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
-        {
-            var createIndex = new CreateIndex(elasticSearchRepository);
-            var create = new CreateEntry(elasticSearchRepository);
-            var auditLog = new AuditLog(elasticSearchRepository);
-            create.Next(auditLog);
 
-            return create;
-        }
 
         private AutomicTransactionPipeline<WebhookPayloadContext> CreatePipeline(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository) => input.Payload.Event switch
         {
             null => throw new NotSupportedException(),
             "entry.create" => CreateWorkflow(input, elasticSearchRepository),
             "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
+            "entry.update" => EditWorkflow(input, elasticSearchRepository),
             _ => throw new NotSupportedException()
         };
     }
