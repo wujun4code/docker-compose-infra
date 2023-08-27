@@ -7,9 +7,9 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["BetterCoding.MessagePubSubCenter.Workers/BetterCoding.MessagePubSubCenter.Workers.csproj", "BetterCoding.MessagePubSubCenter.Workers/"]
-RUN dotnet restore "BetterCoding.MessagePubSubCenter.Workers/BetterCoding.MessagePubSubCenter.Workers.csproj"
 COPY . .
+RUN dotnet restore "BetterCoding.MessagePubSubCenter.Workers/BetterCoding.MessagePubSubCenter.Workers.csproj"
+
 WORKDIR "/src/BetterCoding.MessagePubSubCenter.Workers"
 RUN dotnet build "BetterCoding.MessagePubSubCenter.Workers.csproj" -c Release -o /app/build
 

@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  mpbc-workers:
+    build:
+      dockerfile: ./BetterCoding.MessagePubSubCenter.Workers/Dockerfile
+      context: ./
+    image: bc-mpbc-workers:latest
+    container_name: mpbc-workers
+    env_file: 
+      - ./BetterCoding.MessagePubSubCenter.Workers/.env.production
+    ports:
+      - '8090:80'
+    networks:
+      - rabbitmq
+      - elasticsearch
+
+networks:
+  rabbitmq:
+    external: true
+  elasticsearch:
+    external: true
