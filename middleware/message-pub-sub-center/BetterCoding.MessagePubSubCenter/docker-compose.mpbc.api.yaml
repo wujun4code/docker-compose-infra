@@ -9,7 +9,7 @@ services:
     restart: always
     container_name: mpbc-api
     env_file: 
-      - ./BetterCoding.MessagePubSubCenter.API/.env.production
+      - ./BetterCoding.MessagePubSubCenter.API/.env
     ports:
       - '8080:80'
     networks:
