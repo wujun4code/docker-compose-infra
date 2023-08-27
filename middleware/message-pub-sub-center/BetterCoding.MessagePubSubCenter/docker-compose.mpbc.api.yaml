@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  strapi:
+  mpbc-api:
     build:
       dockerfile: ./BetterCoding.MessagePubSubCenter.API/Dockerfile
       context: ./
@@ -14,9 +14,13 @@ services:
     networks:
       - rabbitmq
       - elasticsearch
+      - mpbc
 
 networks:
   rabbitmq:
     external: true
   elasticsearch:
-    external: true  
+    external: true
+  mpbc:
+    name: mpbc
+    driver: bridge
