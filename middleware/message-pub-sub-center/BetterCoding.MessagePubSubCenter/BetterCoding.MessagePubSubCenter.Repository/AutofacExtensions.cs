@@ -16,7 +16,9 @@ namespace BetterCoding.MessagePubSubCenter.Repository
             }
 
             var settings = new ElasticsearchClientSettings(new Uri(elasticsearchUrl))
+#if DEBUG
                 .EnableDebugMode()
+#endif
                 .PrettyJson()
                 .RequestTimeout(TimeSpan.FromMinutes(2));
 

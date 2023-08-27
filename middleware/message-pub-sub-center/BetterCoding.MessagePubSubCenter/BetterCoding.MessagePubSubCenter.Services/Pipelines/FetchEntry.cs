@@ -16,14 +16,20 @@ namespace BetterCoding.MessagePubSubCenter.Services.Pipelines
         {
             var exist = input.Payload.Entry.TryGetValue("id", out var id);
             if (!exist) throw new MissingFieldException(nameof(id));
-            if(id == null) throw new MissingFieldException(nameof(id));
+            if (id == null) throw new MissingFieldException(nameof(id));
 
             var validInt = int.TryParse(id.ToString(), out var idFromInt);
             if (!validInt) throw new InvalidDataException();
 
             Elastic.Clients.Elasticsearch.Id convertedId = idFromInt;
 
-            var fetched = await _elasticSearchRepository.GetAsync<Dictionary<string, object>, Elastic.Clients.Elasticsearch.Id>(convertedId, input.Payload.Model);
+            var fetched = await _elasticSearchRepository
+                .FindOneAsync<Dictionary<string, object>, Elastic.Clients.Elasticsearch.Id>(
+                convertedId, input.Payload.Model,
+                hit =>
+                {
+                    input.ElasticSearchId = hit.Id;
+                });
             input.ServerFeteched = fetched;
             return input;
         }

@@ -1,4 +1,6 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Core.Search;
+using Elastic.Clients.Elasticsearch.QueryDsl;
 
 namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
 {
@@ -17,6 +19,7 @@ namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
              where TId : Id;
         Task<T> GetAsync<T, TId>(TId id, string collectionName = "")
              where TId : Id;
+        Task<T> FindOneAsync<T, TId>(TId id, string collectionName = "", Action<Hit<T>> idAssignCallback = null);
     }
 
     public abstract class ElasticSearchRepository : IElasticSearchRepository
@@ -71,15 +74,47 @@ namespace BetterCoding.MessagePubSubCenter.Repository.ElasticSearch
             {
                 if (response.ApiCallDetails.OriginalException != null)
                     throw response.ApiCallDetails.OriginalException;
-                else if (response.ElasticsearchServerError != null 
-                    && response.ElasticsearchServerError.Status == 404) 
+                else if (response.ElasticsearchServerError != null
+                    && response.ElasticsearchServerError.Status == 404)
                 {
                     throw new KeyNotFoundException($"index or doc can not be found");
                 }
             }
 
-            if (response.Source == null) throw new  KeyNotFoundException(response.ApiCallDetails.ToString());
+            if (response.Source == null) throw new KeyNotFoundException(response.ApiCallDetails.ToString());
             return response.Source;
+        }
+
+        public async Task<T> FindOneAsync<T, TId>(TId id, string collectionName = "", Action<Hit<T>> idAssignCallback = null)
+        {
+            var indexName = string.IsNullOrEmpty(collectionName) ? _repositoryHub.CollectionNameMapping.GetCollectionName<T>() : collectionName;
+            var request = new SearchRequest(indexName)
+            {
+                From = 0,
+                Size = 10,
+                Query = new TermQuery("id") { Value = id.ToString() }
+            };
+            var response = await _client.SearchAsync<T>(request);
+            if (!response.IsValidResponse)
+            {
+                if (response.ApiCallDetails.OriginalException != null)
+                    throw response.ApiCallDetails.OriginalException;
+                else if (response.ElasticsearchServerError != null
+                    && response.ElasticsearchServerError.Status == 404)
+                {
+                    throw new KeyNotFoundException($"index or doc can not be found");
+                }
+            }
+
+            if (response.Documents == null) throw new KeyNotFoundException(response.ApiCallDetails.ToString());
+            var docs = response.Hits.Select(h =>
+              {
+                  idAssignCallback?.Invoke(h);
+                  return h.Source;
+              });
+            var result = docs.FirstOrDefault();
+            if (result == null) return default;
+            return result;
         }
     }
 

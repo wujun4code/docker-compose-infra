@@ -12,5 +12,8 @@ namespace BetterCoding.MessagePubSubCenter.Services.Pipelines.Webhook
         public WebhookPayload Payload { get; set; }
 
         public Dictionary<string,object> ServerFeteched { get; set; }
+
+        public bool IndexExist { get; set; }
+        public Elastic.Clients.Elasticsearch.Id ElasticSearchId { get; set; }
     }
 }
