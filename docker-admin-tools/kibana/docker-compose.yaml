@@ -11,4 +11,4 @@ services:
 
 networks:
   elasticsearch:
-    external: true    
+    external: true

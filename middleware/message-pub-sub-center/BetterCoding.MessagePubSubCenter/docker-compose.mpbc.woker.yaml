@@ -6,11 +6,12 @@ services:
       dockerfile: ./BetterCoding.MessagePubSubCenter.Workers/Dockerfile
       context: ./
     image: bc-mpbc-workers:latest
-    container_name: mpbc-workers
+    deploy:
+      mode: replicated
+      replicas: 2
+    restart: always
     env_file: 
-      - ./BetterCoding.MessagePubSubCenter.Workers/.env.production
-    ports:
-      - '8090:80'
+      - ./BetterCoding.MessagePubSubCenter.Workers/.env
     networks:
       - rabbitmq
       - elasticsearch

@@ -1,8 +1,8 @@
 {
     "users": [
         {
-            "name": "demo",
-            "password": "CHANGE-ME",
+            "name": "pub-sub",
+            "password": "gnXbTpWiKwWAMDu7",
             "tags": "administrator"
         }
     ],
@@ -13,7 +13,7 @@
     ],
     "permissions": [
         {
-            "user": "demo",
+            "user": "pub-sub",
             "vhost": "/",
             "configure": ".*",
             "write": ".*",
