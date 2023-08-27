@@ -32,33 +32,12 @@ namespace BetterCoding.MessagePubSubCenter.Services
             await _bus.PubSub.SubscribeAsync(subscriptionId, handler, x => x.WithTopic(_topic));
         }
 
-        class SyncLog : AutomicTransactionPipeline<WebhookPayloadContext>
-        {
-            IElasticSearchRepository _elasticSearchRepository;
-            public SyncLog(IElasticSearchRepository elasticSearchRepository)
-            {
-                _elasticSearchRepository = elasticSearchRepository;
-            }
-
-            public override async Task<WebhookPayloadContext> ProcessAsync(WebhookPayloadContext input)
-            {
-                var entry = new EntryLog(input);
-                var serverData = entry.Context.Payload;
-                await _elasticSearchRepository.AddAsync(serverData, entry.CollectionName);
-                return input;
-            }
-
-            public override Task<WebhookPayloadContext> RevertAsync(WebhookPayloadContext input)
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         public async Task SyncToElasticSearch(WebhookPayload webhookPayload)
         {
             var context = new WebhookPayloadContext(webhookPayload);
+
             var syncPipeline = CreatePipeline(context, _elasticSearchRepository);
-            syncPipeline.Next(new SyncLog(_elasticSearchRepository));
 
             await syncPipeline.ExecuteAsync(context);
         }
@@ -75,6 +54,7 @@ namespace BetterCoding.MessagePubSubCenter.Services
 
         private AutomicTransactionPipeline<WebhookPayloadContext> CreateWorkflow(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository)
         {
+            var createIndex = new CreateIndex(elasticSearchRepository);
             var create = new CreateEntry(elasticSearchRepository);
             var auditLog = new AuditLog(elasticSearchRepository);
             create.Next(auditLog);
