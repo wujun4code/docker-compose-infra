@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  rabbitmq-exporter:
+    image: kbudde/rabbitmq-exporter
+    container_name: rabbitmq-exporter
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '9419:9419'
+    networks:
+      - rabbitmq
+      - monitoring
+
+networks:
+  rabbitmq:
+    external: true
+  monitoring:
+    external: true
