@@ -8,7 +8,6 @@ namespace BetterCoding.MessagePubSubCenter.Services
 {
     public class StrapiWebhookService : IStrapiWebhookService
     {
-        private readonly string _topic = "strapi.webhook";
         private readonly MassTransit.IBus _mtBus;
         private readonly IElasticSearchRepository _elasticSearchRepository;
 
@@ -22,7 +21,6 @@ namespace BetterCoding.MessagePubSubCenter.Services
 
         public async Task PublishMessageAsync(WebhookPayload strapiWebhookPayload, CancellationToken stoppingToken = default)
         {
-            //await _bus.PubSub.PublishAsync(strapiWebhookPayload, _topic);
             await _mtBus.Publish(strapiWebhookPayload);
         }
 
@@ -67,12 +65,13 @@ namespace BetterCoding.MessagePubSubCenter.Services
 
         private AutomicTransactionPipeline<WebhookPayloadContext> CreatePipeline(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository) => input.Payload.Event switch
         {
-            null => throw new NotSupportedException(),
+            null => throw new NotSupportedException($"no event name"),
             "entry.create" => CreateWorkflow(input, elasticSearchRepository),
-            "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
             "entry.update" => EditWorkflow(input, elasticSearchRepository),
+            "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
             "entry.publish" => EditWorkflow(input, elasticSearchRepository),
-            _ => throw new NotSupportedException()
+            "entry.unpublish" => EditWorkflow(input, elasticSearchRepository),
+            _ => throw new NotSupportedException(input.Payload.Event)
         };
     }
 }
