@@ -19,13 +19,13 @@ namespace BetterCoding.MessagePubSubCenter.Services
             _elasticSearchRepository = elasticSearchRepository;
         }
 
-        public async Task PublishMessageAsync(WebhookPayload strapiWebhookPayload, CancellationToken stoppingToken = default)
+        public async Task PublishMessageAsync(IWebhookPayload strapiWebhookPayload, CancellationToken stoppingToken = default)
         {
             await _mtBus.Publish(strapiWebhookPayload);
         }
 
 
-        public async Task SyncToElasticSearch(WebhookPayload webhookPayload)
+        public async Task SyncToElasticSearch(IWebhookPayload webhookPayload)
         {
             var context = new WebhookPayloadContext(webhookPayload);
 

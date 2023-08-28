@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
 {
-    public class StrapiWebhookConsumer : IConsumer<WebhookPayload>
+    public class StrapiWebhookConsumer : IConsumer<IWebhookPayload>
     {
         private readonly ILogger<StrapiWebhookConsumer> _logger;
         private readonly IStrapiWebhookService _strapiWebhookService;
@@ -17,7 +17,7 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
             _strapiWebhookService = strapiWebhookService;
         }
 
-        public async Task Consume(ConsumeContext<WebhookPayload> context)
+        public async Task Consume(ConsumeContext<IWebhookPayload> context)
         {
             var json = JsonConvert.SerializeObject(context.Message);
             _logger.LogInformation("Received Json: {json}", json);
@@ -28,7 +28,8 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
     public class StrapiWebhookConsumerDefinition : ConsumerDefinition<StrapiWebhookConsumer>
     {
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
-            IConsumerConfigurator<StrapiWebhookConsumer> consumerConfigurator)
+            IConsumerConfigurator<StrapiWebhookConsumer> consumerConfigurator,
+            IRegistrationContext context)
         {
             var intervals = Convert(
                 IntervalByMilisecond.ThreeSeconds,
