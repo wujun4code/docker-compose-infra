@@ -1,4 +1,5 @@
-﻿using BetterCoding.MessagePubSubCenter.Services;
+﻿using BetterCoding.MessagePubSubCenter.Entity.Enums;
+using BetterCoding.MessagePubSubCenter.Services;
 using BetterCoding.Strapi.SDK.Core.Webhook;
 using MassTransit;
 using Newtonsoft.Json;
@@ -29,7 +30,21 @@ namespace BetterCoding.MessagePubSubCenter.Workers.Consumers
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
             IConsumerConfigurator<StrapiWebhookConsumer> consumerConfigurator)
         {
-            endpointConfigurator.UseMessageRetry(r => r.Intervals(3000, 5000, 10000));
+            var intervals = Convert(
+                IntervalByMilisecond.ThreeSeconds,
+                IntervalByMilisecond.FiveSeconds,
+                IntervalByMilisecond.TenSeconds,
+                IntervalByMilisecond.FifteenSeconds,
+                IntervalByMilisecond.HalfAMinute,
+                IntervalByMilisecond.OneMinute);
+
+            endpointConfigurator.UseMessageRetry(r => r.Intervals(intervals));
+        }
+
+        int[] Convert(params IntervalByMilisecond[] values)
+        {
+            var array = values.Select(v => System.Convert.ToInt32(v)).ToArray();
+            return array;
         }
     }
 }
