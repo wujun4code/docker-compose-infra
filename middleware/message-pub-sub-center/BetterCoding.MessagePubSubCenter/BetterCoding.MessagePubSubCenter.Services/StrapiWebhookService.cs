@@ -1,35 +1,27 @@
-﻿using BetterCoding.MessagePubSubCenter.Repository;
-using BetterCoding.MessagePubSubCenter.Repository.ElasticSearch;
+﻿using BetterCoding.MessagePubSubCenter.Repository.ElasticSearch;
 using BetterCoding.MessagePubSubCenter.Services.Pipelines;
 using BetterCoding.MessagePubSubCenter.Services.Pipelines.Webhook;
 using BetterCoding.Patterns.Pipeline;
 using BetterCoding.Strapi.SDK.Core.Webhook;
-using EasyNetQ;
 
 namespace BetterCoding.MessagePubSubCenter.Services
 {
     public class StrapiWebhookService : IStrapiWebhookService
     {
-        private readonly string _topic = "strapi.webhook";
-
-        private readonly IBus _bus;
+        private readonly MassTransit.IBus _mtBus;
         private readonly IElasticSearchRepository _elasticSearchRepository;
 
-        public StrapiWebhookService(IBus bus,
+        public StrapiWebhookService(
+            MassTransit.IBus mtBus,
             IElasticSearchRepository elasticSearchRepository)
         {
-            _bus = bus;
+            _mtBus = mtBus;
             _elasticSearchRepository = elasticSearchRepository;
         }
 
-        public async Task PublishMessageAsync(WebhookPayload strapiWebhookPayload)
+        public async Task PublishMessageAsync(WebhookPayload strapiWebhookPayload, CancellationToken stoppingToken = default)
         {
-            await _bus.PubSub.PublishAsync(strapiWebhookPayload, _topic);
-        }
-
-        public async Task SubscribeAsync(string subscriptionId, Func<WebhookPayload, CancellationToken, Task> handler)
-        {
-            await _bus.PubSub.SubscribeAsync(subscriptionId, handler, x => x.WithTopic(_topic));
+            await _mtBus.Publish(strapiWebhookPayload);
         }
 
 
@@ -73,12 +65,13 @@ namespace BetterCoding.MessagePubSubCenter.Services
 
         private AutomicTransactionPipeline<WebhookPayloadContext> CreatePipeline(WebhookPayloadContext input, IElasticSearchRepository elasticSearchRepository) => input.Payload.Event switch
         {
-            null => throw new NotSupportedException(),
+            null => throw new NotSupportedException($"no event name"),
             "entry.create" => CreateWorkflow(input, elasticSearchRepository),
-            "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
             "entry.update" => EditWorkflow(input, elasticSearchRepository),
+            "entry.delete" => DeleteWorkflow(input, elasticSearchRepository),
             "entry.publish" => EditWorkflow(input, elasticSearchRepository),
-            _ => throw new NotSupportedException()
+            "entry.unpublish" => EditWorkflow(input, elasticSearchRepository),
+            _ => throw new NotSupportedException(input.Payload.Event)
         };
     }
 }

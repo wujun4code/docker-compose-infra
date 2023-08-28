@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   mpbc-workers:
@@ -8,7 +8,7 @@ services:
     image: bc-mpbc-workers:latest
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
     restart: always
     env_file: 
       - ./BetterCoding.MessagePubSubCenter.Workers/.env

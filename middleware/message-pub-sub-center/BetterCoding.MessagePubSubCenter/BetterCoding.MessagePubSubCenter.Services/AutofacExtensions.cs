@@ -15,7 +15,6 @@ namespace BetterCoding.MessagePubSubCenter.Services
         public static ContainerBuilder UseServices(this ContainerBuilder builder, IConfiguration configuration)
         {
             builder.RegisterAssembly("BetterCoding.MessagePubSubCenter.Services");
-            builder.UseEasyNetQ(configuration);
             builder.UseStrapiSDK(configuration);
             builder.UseElasticSearch(configuration);
             builder.EnableStrapiElasticSearch(configuration);

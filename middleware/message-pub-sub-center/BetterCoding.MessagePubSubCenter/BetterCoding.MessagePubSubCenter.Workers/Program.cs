@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BetterCoding.MessagePubSubCenter.Infra;
 using BetterCoding.MessagePubSubCenter.Services;
-using BetterCoding.MessagePubSubCenter.Workers.Consumers;
+using MassTransit;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +14,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHostedService<StrapiElasticSearchSync>();
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-builder.Host.ConfigureContainer<ContainerBuilder>(
-    autofac => autofac.UseServices(builder.Configuration));
+builder.Host.ConfigureServices((hostContext, services) => 
+{
+    services.AddMassTransitRabbitMq(builder.Configuration, x => 
+    {
+        var entryAssembly = Assembly.GetEntryAssembly();
+        x.AddConsumers(entryAssembly);
+        x.AddSagaStateMachines(entryAssembly);
+        x.AddSagas(entryAssembly);
+        x.AddActivities(entryAssembly);
+    });
+});
+
+builder.Host.ConfigureContainer<ContainerBuilder>(autofac =>
+{
+    autofac.UseServices(builder.Configuration);
+});
 
 var app = builder.Build();
 
