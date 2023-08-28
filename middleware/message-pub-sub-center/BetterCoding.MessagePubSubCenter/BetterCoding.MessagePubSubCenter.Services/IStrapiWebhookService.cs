@@ -4,8 +4,7 @@ namespace BetterCoding.MessagePubSubCenter.Services
 {
     public interface IStrapiWebhookService
     {
-        Task PublishMessageAsync(WebhookPayload strapiWebhookPayload);
-        Task SubscribeAsync(string subscriptionId, Func<WebhookPayload, CancellationToken, Task> handler);
+        Task PublishMessageAsync(WebhookPayload strapiWebhookPayload, CancellationToken stoppingToken = default);
         Task SyncToElasticSearch(WebhookPayload webhookPayload);
     }
 }

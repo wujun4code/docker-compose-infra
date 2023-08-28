@@ -1,6 +1,5 @@
 using BetterCoding.MessagePubSubCenter.Services;
 using BetterCoding.Strapi.SDK.Core.Webhook;
-using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
