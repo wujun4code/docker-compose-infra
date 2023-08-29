@@ -4,12 +4,13 @@ namespace BetterCoding.MessagePubSubCenter.Services.Pipelines.Webhook
 {
     public class WebhookPayloadContext
     {
-        public WebhookPayloadContext(WebhookPayload payload)
+        public WebhookPayloadContext(IWebhookPayload payload)
         {
             Payload = payload;
+            ServerFeteched = new Dictionary<string, object> { };
         }
 
-        public WebhookPayload Payload { get; set; }
+        public IWebhookPayload Payload { get; set; }
 
         public Dictionary<string,object> ServerFeteched { get; set; }
 
