@@ -25,13 +25,15 @@ services:
     networks:
       - postgres
       - strapi
-      - mpbc
+      - mpsc
 
 networks:
   postgres:
     external: true
-  mpbc:
-    external: true
+    
+  mpsc:
+    name: mpsc
+    driver: bridge
 
   strapi:
     name: strapi

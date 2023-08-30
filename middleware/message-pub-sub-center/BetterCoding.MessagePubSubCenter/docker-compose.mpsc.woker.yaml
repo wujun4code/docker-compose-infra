@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  mpbc-workers:
+  mpsc-workers:
     build:
       dockerfile: ./BetterCoding.MessagePubSubCenter.Workers/Dockerfile
       context: ./
-    image: bc-mpbc-workers:latest
+    image: bc-mpsc-workers:latest
     deploy:
       mode: replicated
       replicas: 2
@@ -15,9 +15,15 @@ services:
     networks:
       - rabbitmq
       - elasticsearch
+      - mpsc
+      - strapi
 
 networks:
   rabbitmq:
     external: true
   elasticsearch:
     external: true
+  strapi:
+    external: true
+  mpsc:
+    external: true    
