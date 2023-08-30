@@ -1,4 +1,5 @@
-﻿using BetterCoding.Strapi.SDK.Core.Services;
+﻿using BetterCoding.Strapi.SDK.Core.Query;
+using BetterCoding.Strapi.SDK.Core.Services;
 
 namespace BetterCoding.Strapi.SDK.Core
 {
@@ -17,6 +18,11 @@ namespace BetterCoding.Strapi.SDK.Core
         {
             ServerConfiguration = configuration is null ? new StrapiServerConfiguration() : configuration;
             Services = serviceHub is null ? new ServiceHub { } : serviceHub;
+        }
+
+        public QueryBuilder GetQueryBuilder() 
+        {
+            return new QueryBuilder(Services);
         }
     }
 }

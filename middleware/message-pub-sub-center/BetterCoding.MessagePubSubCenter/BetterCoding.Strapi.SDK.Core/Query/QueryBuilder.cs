@@ -1,13 +1,19 @@
-﻿namespace BetterCoding.Strapi.SDK.Core.Query
+﻿using BetterCoding.Strapi.SDK.Core.Services;
+
+namespace BetterCoding.Strapi.SDK.Core.Query
 {
     public class QueryBuilder
     {
         protected IDictionary<string, object> _filters;
         public IDictionary<string, object> Filters => _filters;
         protected QueryBuilder Instance => this;
-        public QueryBuilder()
+
+        public IServiceHub Services { get; internal set; }
+
+        public QueryBuilder(IServiceHub serviceHub = default)
         {
             _filters = new Dictionary<string, object>();
+            Services = serviceHub is null ? new ServiceHub { } : serviceHub;
         }
 
         public virtual QueryBuilder MergerFilter(IDictionary<string, object> filter) 

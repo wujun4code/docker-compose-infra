@@ -1,7 +1,4 @@
-﻿using BetterCoding.Strapi.SDK.Core.Query;
-using Newtonsoft.Json.Linq;
-
-namespace BetterCoding.Strapi.SDK.Core.Tests
+﻿namespace BetterCoding.Strapi.SDK.Core.Tests
 {
     public class QueryStringEncoderTests
     {
@@ -64,7 +61,7 @@ namespace BetterCoding.Strapi.SDK.Core.Tests
             var client = new StrapiClient();
 
             var idInArrray = new Dictionary<string, object> {
-                { "id", new Dictionary<string, object> { { "$eq", new List<object> {1,2,3 } } } },
+                { "id", new Dictionary<string, object> { { "$in", new List<object> { 3,6,8 } } } },
             };
 
             var filters = new Dictionary<string, object>
@@ -73,7 +70,7 @@ namespace BetterCoding.Strapi.SDK.Core.Tests
             };
 
             var actual = client.Services.QueryStringEncoder.Encode(filters);
-            Assert.Equal("filters[id][$eq]=7&filters[name][$eq]=test", actual);
+            Assert.Equal("filters[id][$in][0]=3&filters[id][$in][1]=6&filters[id][$in][2]=8", actual);
         }
     }
 }

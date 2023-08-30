@@ -9,7 +9,7 @@ namespace BetterCoding.Strapi.SDK.Core.Tests
         [Fact]
         public void QueryString_ShouldContainsArray_Test()
         {
-            var builder = new QueryBuilder().ContainedIn("id", new List<object> { 1, 2, 3 });
+            var builder = new StrapiClient().GetQueryBuilder().ContainedIn("id", new List<object> { 1, 2, 3 });
             
         }
     }
