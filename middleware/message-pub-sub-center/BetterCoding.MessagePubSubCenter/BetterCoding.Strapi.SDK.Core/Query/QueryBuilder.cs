@@ -1,4 +1,4 @@
-﻿namespace BetterCoding.Strapi.SDK.Core.Model
+﻿namespace BetterCoding.Strapi.SDK.Core.Query
 {
     public class QueryBuilder
     {

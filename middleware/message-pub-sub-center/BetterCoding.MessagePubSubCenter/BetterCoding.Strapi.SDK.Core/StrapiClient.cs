@@ -13,9 +13,9 @@ namespace BetterCoding.Strapi.SDK.Core
         public StrapiServerConfiguration ServerConfiguration { get; set; }
         public IServiceHub Services { get; internal set; }
 
-        public StrapiClient(StrapiServerConfiguration configuration, IServiceHub serviceHub = default)
+        public StrapiClient(StrapiServerConfiguration configuration = default, IServiceHub serviceHub = default)
         {
-            ServerConfiguration = configuration;
+            ServerConfiguration = configuration is null ? new StrapiServerConfiguration() : configuration;
             Services = serviceHub is null ? new ServiceHub { } : serviceHub;
         }
     }

@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\BetterCoding.Strapi.SDK.Core\BetterCoding.Strapi.SDK.Core.csproj" />
+  </ItemGroup>
+
 </Project>
