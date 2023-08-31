@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  mpbc-api:
+  mpsc-api:
     build:
       dockerfile: ./BetterCoding.MessagePubSubCenter.API/Dockerfile
       context: ./
-    image: bc-mpbc-api:latest
+    image: bc-mpsc-api:latest
     restart: always
-    container_name: mpbc-api
+    container_name: mpsc-api
     env_file: 
       - ./BetterCoding.MessagePubSubCenter.API/.env
     ports:
@@ -15,13 +15,15 @@ services:
     networks:
       - rabbitmq
       - elasticsearch
-      - mpbc
+      - mpsc
+      - strapi
 
 networks:
   rabbitmq:
     external: true
   elasticsearch:
     external: true
-  mpbc:
-    name: mpbc
-    driver: bridge
+  strapi:
+    external: true    
+  mpsc:
+    external: true
