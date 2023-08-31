@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BetterCoding.MessagePubSubCenter.Contracts\BetterCoding.MessagePubSubCenter.Contracts.csproj" />
     <ProjectReference Include="..\BetterCoding.MessagePubSubCenter.Services\BetterCoding.MessagePubSubCenter.Services.csproj" />
     <ProjectReference Include="..\BetterCoding.Strapi.SDK.Core\BetterCoding.Strapi.SDK.Core.csproj" />
   </ItemGroup>

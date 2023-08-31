@@ -9,7 +9,7 @@ namespace BetterCoding.Strapi.SDK.Core.Http
 {
     public interface IHttpRequst
     {
-        Uri Target => new Uri(new Uri(Resource), Path);
+        Uri Target { get; }
 
         string Resource { get; set; }
 
@@ -22,7 +22,7 @@ namespace BetterCoding.Strapi.SDK.Core.Http
         string Method { get; set; }
     }
 
-    public class HttpRequst : IHttpRequst 
+    public class HttpRequest : IHttpRequst
     {
         public Uri Target => new Uri(new Uri(Resource), Path);
 
@@ -33,18 +33,27 @@ namespace BetterCoding.Strapi.SDK.Core.Http
         public IList<KeyValuePair<string, string>> Headers { get; set; }
 
         public IDictionary<string, object> DataObject { get; private set; }
-        public virtual Stream Data
-        {
-            get => Data ??= DataObject is { } ? new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(DataObject))) : default;
-            set => Data = value;
-        }
-
+        public virtual Stream Data { get; set; }
         public string Method { get; set; }
 
-        public HttpRequst(string relativeUri, 
+        public HttpRequest(string relativeUri,
+            string method, string sessionToken = null,
+            IList<KeyValuePair<string, string>> headers = null,
+            IDictionary<string, object> data = null) : this(
+                relativeUri: relativeUri,
+                method: method,
+                sessionToken: sessionToken,
+                headers: headers,
+                stream: data is { } ? new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))) : default,
+                contentType: data != null ? "application/json" : null)
+        {
+            
+        }
+
+        public HttpRequest(string relativeUri,
             string method,
-            string sessionToken = null, 
-            IList<KeyValuePair<string, string>> headers = null, 
+            string sessionToken = null,
+            IList<KeyValuePair<string, string>> headers = null,
             Stream stream = null, string contentType = null)
         {
             Path = relativeUri;
@@ -63,7 +72,7 @@ namespace BetterCoding.Strapi.SDK.Core.Http
             }
         }
 
-        public HttpRequst(HttpRequst other)
+        public HttpRequest(HttpRequest other)
         {
             Resource = other.Resource;
             Path = other.Path;

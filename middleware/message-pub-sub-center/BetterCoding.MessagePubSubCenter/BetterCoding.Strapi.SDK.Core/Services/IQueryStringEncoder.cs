@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace BetterCoding.Strapi.SDK.Core.Services
+﻿namespace BetterCoding.Strapi.SDK.Core.Services
 {
     public interface IQueryStringEncoder
     {

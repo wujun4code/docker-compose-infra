@@ -13,7 +13,7 @@ namespace BetterCoding.Strapi.SDK.Core.Query
         public QueryBuilder(IServiceHub serviceHub = default)
         {
             _filters = new Dictionary<string, object>();
-            Services = serviceHub is null ? new ServiceHub { } : serviceHub;
+            Services = StrapiClient.Instance.Services;
         }
 
         public virtual QueryBuilder MergerFilter(IDictionary<string, object> filter) 
