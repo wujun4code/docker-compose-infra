@@ -21,12 +21,8 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
                     {"password", password}
                 });
 
-            var response = await Services.WebClient.ExecuteAsync(request);
-            if (response.Item1 == System.Net.HttpStatusCode.OK)
-            {
-                var user = new { response.Item2 };
-
-            }
+            var result = await ExecuteAsync(request);
+            var user = Services.UserDecoder.Decode(result, Services);
         }
 
         public HttpRequest CreateRequest(
@@ -47,6 +43,20 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
             };
 
             return request;
+        }
+
+        public async Task<IDictionary<string, object>> ExecuteAsync(HttpRequest request)
+        {
+            var response = await Services.WebClient.ExecuteAsync(request);
+            var content = response.Item2;
+            var statusCode = (int)response.Item1;
+            if (statusCode < 200 || statusCode > 299)
+            {
+                throw new HttpRequestException();
+            }
+
+            var contentJson = Services.JsonTool.Parse(content, Services);
+            return contentJson;
         }
 
 

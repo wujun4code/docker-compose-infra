@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Strapi
 
 using BetterCoding.Strapi.SDK.Core.Http;
+using BetterCoding.Strapi.SDK.Core.User;
 using BetterCoding.Strapi.SDK.Core.Webhook;
 
 namespace BetterCoding.Strapi.SDK.Core.Services
@@ -13,11 +14,13 @@ namespace BetterCoding.Strapi.SDK.Core.Services
         IQueryStringEncoder QueryStringEncoder { get; }
         IWebClient WebClient { get; }
         StrapiServerConfiguration ServerConfiguration { get; }
+        IJsonTool JsonTool { get; }
+        IUserDecoder UserDecoder { get; }
     }
 
     public class ServiceHub : IServiceHub
     {
-        public ServiceHub(StrapiServerConfiguration strapiServerConfiguration) 
+        public ServiceHub(StrapiServerConfiguration strapiServerConfiguration)
         {
             ServerConfiguration = strapiServerConfiguration;
         }
@@ -27,5 +30,7 @@ namespace BetterCoding.Strapi.SDK.Core.Services
         public IQueryStringEncoder QueryStringEncoder => new QueryStringEncoder();
         public IWebClient WebClient => new UniversalWebClient();
         public StrapiServerConfiguration ServerConfiguration { get; internal set; }
+        public IJsonTool JsonTool => new JsonTool();
+        public IUserDecoder UserDecoder => new UserDecoder();
     }
 }

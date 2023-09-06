@@ -99,7 +99,6 @@ namespace BetterCoding.Strapi.SDK.Core.Http
             {
                 HttpResponseMessage response = httpMessageTask.Result;
                 uploadProgress.Report(new DataTransferLevel { Amount = 1 });
-
                 return response.Content.ReadAsStreamAsync().ContinueWith(streamTask =>
                 {
                     MemoryStream resultStream = new MemoryStream { };
