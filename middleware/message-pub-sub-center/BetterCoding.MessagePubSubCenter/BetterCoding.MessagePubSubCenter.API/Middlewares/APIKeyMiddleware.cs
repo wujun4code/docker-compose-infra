@@ -19,7 +19,7 @@ namespace BetterCoding.MessagePubSubCenter.API.Middlewares
         {
             if (string.IsNullOrWhiteSpace(context.Request.Headers[APIKeyHeaderName]))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return;
             }
             string? userApiKey = context.Request.Headers[APIKeyHeaderName];
