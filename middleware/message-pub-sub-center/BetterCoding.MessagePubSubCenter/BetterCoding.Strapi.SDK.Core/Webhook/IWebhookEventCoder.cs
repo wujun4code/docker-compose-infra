@@ -1,9 +1,4 @@
 ﻿using BetterCoding.Strapi.SDK.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BetterCoding.Strapi.SDK.Core.Webhook
 {
@@ -20,7 +15,7 @@ namespace BetterCoding.Strapi.SDK.Core.Webhook
                 mutableData = new Dictionary<string, object>(data);
 
             string eventName = Extract(mutableData, "event", (obj) => obj as string);
-            DateTime? createdAt = Extract<DateTime?>(mutableData, "createdAt", (obj) => DataDecode.ParseDate(obj as string));
+            DateTime? createdAt = Extract<DateTime?>(mutableData, "createdAt", (obj) => DataDecoder.ParseDate(obj as string));
             string model = Extract(mutableData, "model", (obj) => obj as string);
 
             foreach (KeyValuePair<string, object> pair in mutableData)
@@ -36,7 +31,6 @@ namespace BetterCoding.Strapi.SDK.Core.Webhook
                 Entry = serverData,
             };
         }
-
 
         T Extract<T>(IDictionary<string, object> data, string key, Func<object, T> action)
         {

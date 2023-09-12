@@ -8,7 +8,7 @@ namespace BetterCoding.Strapi.SDK.Core.Services
         T Grab<T>(IDictionary<string, object> dictionary, string path, Func<object, T> converter);
     }
 
-    public class DataDecode : IDataDecoder
+    public class DataDecoder : IDataDecoder
     {
         public object Decode(object data, IServiceHub serviceHub) => data switch
         {

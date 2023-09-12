@@ -1,10 +1,13 @@
 ﻿using BetterCoding.Strapi.SDK.Core.Http;
 using BetterCoding.Strapi.SDK.Core.Services;
+using BetterCoding.Strapi.SDK.Core.Utilities;
+using System.Text;
 
 namespace BetterCoding.Strapi.SDK.Core.Entry
 {
     public class StrapiREST
     {
+        public string APIPath = "api";
         public IServiceHub Services { get; internal set; }
 
         public StrapiREST(IServiceHub serviceHub = default)
@@ -12,17 +15,13 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
             Services = StrapiClient.Instance.Services;
         }
 
-        public async Task LogInAsync(string username, string password)
+        public async Task<StrapiEntry> Get(string entryName, int id)
         {
-            var request = CreateRequest("/api/auth/local", "POST",
-                data: new Dictionary<string, object>
-                {
-                    {"identifier", username},
-                    {"password", password}
-                });
-
-            var result = await ExecuteAsync(request);
-            var user = Services.UserDecoder.Decode(result, Services);
+            var serverState = await ExecuteAsync($"{APIPath}/{entryName}/{id}", "GET").OnSuccess(task =>
+            task.Result["data"] as IDictionary<string, object> is Dictionary<string, object> item && item != null ? Services.EntryStateCoder.Decode(item, Services.DataDecoder, Services) : null);
+            if (serverState == null) throw new EntryPointNotFoundException();
+            var entry = Services.EntryController.Create(entryName, serverState);
+            return entry;
         }
 
         public HttpRequest CreateRequest(
@@ -32,7 +31,7 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
         {
             var presetHeaders = new Dictionary<string, string>
             {
-
+                { "Authorization", $"Bearer {Services.ServerConfiguration.APIToken}" }
             };
 
             var request = new HttpRequest(relativeUri, method,
@@ -59,12 +58,13 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
             return contentJson;
         }
 
-
-
-        //public async Task<T> Get<T, TId>(string entryName, TId id) 
-        //{
-        //    var request = new HttpRequest("");
-        //}
-
+        public async Task<IDictionary<string, object>> ExecuteAsync(
+            string relativeUri,
+            string method,
+            IDictionary<string, object> data = null)
+        {
+            var request = CreateRequest($"{relativeUri}", method, data);
+            return await ExecuteAsync(request);
+        }
     }
 }

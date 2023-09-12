@@ -41,10 +41,10 @@ namespace BetterCoding.MessagePubSubCenter.API.Controllers
             }
         }
 
-        [HttpPost("forward/login")]
-        public async Task<IActionResult> LogIn([FromForm] LogInRequest request)
+        [HttpGet("forward/{entryName}/{id}")]
+        public async Task<IActionResult> LogIn(string entryName, int id)
         {
-            await _strapiClient.GetREST().LogInAsync(request.Username, request.Password);
+            await _strapiClient.GetREST().Get(entryName, id);
             return Ok();
         }
     }

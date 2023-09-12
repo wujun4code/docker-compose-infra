@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BetterCoding.MessagePubSubCenter.Contracts.Request
 {
-    public class LogInRequest
+    public class GetEntryRequest
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public int Id { get; set; }
+        public string EntryName { get; set; }
     }
 }

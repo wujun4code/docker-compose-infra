@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BetterCoding.Strapi.SDK.Core.Services;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BetterCoding.Strapi.SDK.Core.Http
 {
@@ -44,7 +40,7 @@ namespace BetterCoding.Strapi.SDK.Core.Http
                 method: method,
                 sessionToken: sessionToken,
                 headers: headers,
-                stream: data is { } ? new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))) : default,
+                stream: data is { } ? new MemoryStream(Encoding.UTF8.GetBytes(JsonUtilities.Encode(data))) : default,
                 contentType: data != null ? "application/json" : null)
         {
             
